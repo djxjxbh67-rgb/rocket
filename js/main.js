@@ -117,6 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ВСТАВЬТЕ СЮДА ВАШ WEBHOOK ИЗ MAKE.COM, НАПРИМЕР: 'https://hook.eu1.make.com/xxxxxxxxxxxxxxxxxxxxxxxxxxx'
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/n627zty7p6legfvvnxsp5ueuy96ud4u7';
 
+    // Generate a unique session ID for the chat when the page loads
+    const CHAT_SESSION_ID = Date.now().toString(36) + Math.random().toString(36).substring(2);
+
     if (chatToggle && chatWindow && chatClose) {
         // Toggle chat window
         chatToggle.addEventListener('click', () => {
@@ -157,7 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ message: messageText })
+                        body: JSON.stringify({
+                            message: messageText,
+                            sessionId: CHAT_SESSION_ID
+                        })
                     });
 
                     const data = await response.json();

@@ -221,6 +221,7 @@ ul {
 
 .section {
     padding: var(--section-spacing) 0;
+    scroll-margin-top: 80px;
 }
 
 .section-title {
@@ -253,6 +254,8 @@ ul {
     text-align: center;
     border-top: 1px solid var(--border-color);
     color: var(--text-secondary);
+    padding-bottom: calc(2rem + 60px);
+    /* Space for chat widget on mobile */
 }
 
 /* --- Hero Section --- */
@@ -780,6 +783,19 @@ ul {
 }
 
 @media (max-width: 768px) {
+    .nav {
+        display: none;
+    }
+
+    .header__actions {
+        gap: 0.5rem;
+    }
+
+    .header__actions .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+
     .benefits__grid {
         grid-template-columns: 1fr;
         max-width: 500px;

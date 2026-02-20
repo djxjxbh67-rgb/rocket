@@ -119,6 +119,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
+    // Upsell Buttons Logic
+    // ==========================================
+    const upsellButtons = document.querySelectorAll('.btn--upsell');
+    const formSubjectInput = document.getElementById('form-subject');
+    const selectedUpsellMsg = document.getElementById('selected-upsell-msg');
+    const upsellNameSpan = document.getElementById('upsell-name');
+
+    upsellButtons.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const upsellName = this.getAttribute('data-upsell');
+
+            if (formSubjectInput && selectedUpsellMsg && upsellNameSpan) {
+                // Update form subject to include the upsell
+                formSubjectInput.value = `Заявка с апселлом: ${upsellName}`;
+
+                // Show the message to the user
+                upsellNameSpan.textContent = upsellName;
+                selectedUpsellMsg.style.display = 'block';
+
+                // Scroll to the order form smoothly
+                const orderSection = document.getElementById('order');
+                if (orderSection) {
+                    orderSection.scrollIntoView({ behavior: 'smooth' });
+                }
+
+                // Optionally visually highlight the form
+                const orderForm = document.getElementById('contact-form');
+                if (orderForm) {
+                    orderForm.style.boxShadow = '0 0 0 3px rgba(94, 23, 235, 0.3)';
+                    setTimeout(() => orderForm.style.boxShadow = '', 1500);
+                }
+            }
+        });
+    });
+
+    // ==========================================
     // AI Chat Widget Logic
     // ==========================================
     const chatToggle = document.getElementById('chatToggle');

@@ -113,6 +113,38 @@
                 </div>
             </div>
         </section>
+
+        <!-- Niches/Experts Section -->
+        <section class="niches section bg-secondary" id="niches">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title">Сайты для экспертов</h2>
+                    <p class="section-subtitle">Персональная страница с ИИ-генерацией лидов для вашей ниши.</p>
+                </div>
+                <div class="niches__grid">
+                    <div class="niche-card">
+                        <div class="niche-card__icon">🏠</div>
+                        <h3>Риэлторы</h3>
+                        <p>Каталог объектов и умная анкета для подбора недвижимости.</p>
+                    </div>
+                    <div class="niche-card">
+                        <div class="niche-card__icon">⚖️</div>
+                        <h3>Юристы</h3>
+                        <p>Сбор заявок, описание услуг и автоматическая запись на консультацию.</p>
+                    </div>
+                    <div class="niche-card">
+                        <div class="niche-card__icon">🎯</div>
+                        <h3>Коучи</h3>
+                        <p>Презентация программ, продажа курсов и интеграция с календарем.</p>
+                    </div>
+                    <div class="niche-card">
+                        <div class="niche-card__icon">🎨</div>
+                        <h3>Творцы</h3>
+                        <p>Эффектное портфолио для дизайнеров, фотографов и тату-мастеров.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- Portfolio Section (Hybrid Dark) -->
         <section class="portfolio section" id="portfolio">
             <div class="container">
@@ -187,6 +219,37 @@
             </div>
         </section>
 
+        <!-- Upsell Section -->
+        <section class="upsell section bg-secondary" id="upsell">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title">Усильте маркетинг с ИИ</h2>
+                    <p class="section-subtitle">Дополнительные пакеты генеративного контента для роста ваших продаж.</p>
+                </div>
+                <div class="upsell__grid">
+                    <div class="upsell-card">
+                        <div class="upsell-card__badge">Популярно</div>
+                        <div class="upsell-card__icon">📝</div>
+                        <h3 class="upsell-card__title">AI Контент-план</h3>
+                        <p class="upsell-card__text">Разработка контент-плана и написание постов для ваших соцсетей с
+                            помощью нейросетей на месяц вперед.</p>
+                        <div class="upsell-card__price">от 7 000 ₽</div>
+                        <button class="btn btn--outline btn--upsell" data-upsell="AI Контент-план">Добавить к
+                            заказу</button>
+                    </div>
+                    <div class="upsell-card">
+                        <div class="upsell-card__icon">🖼️</div>
+                        <h3 class="upsell-card__title">Генерация Изображений</h3>
+                        <p class="upsell-card__text">Создание уникальных премикальных изображений (Midjourney) для ваших
+                            постов, статей и рекламы.</p>
+                        <div class="upsell-card__price">от 5 000 ₽</div>
+                        <button class="btn btn--outline btn--upsell" data-upsell="AI генерация изображений">Добавить к
+                            заказу</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Pricing Section -->
         <section class="pricing section" id="pricing">
             <div class="container">
@@ -255,6 +318,13 @@
                         <div style="position: absolute; left: -5000px;" aria-hidden="true">
                             <input type="text" name="_honey" id="contact_honey" tabindex="-1" autocomplete="off">
                         </div>
+
+                        <!-- Выбранный пакет (скрыто по умолчанию) -->
+                        <div id="selected-upsell-msg"
+                            style="display:none; color: var(--accent); margin-bottom: 1rem; font-weight: 600; text-align: center; border: 1px solid var(--accent); padding: 0.5rem; border-radius: 8px;">
+                            🛒 Добавлено к заказу: <span id="upsell-name"></span>
+                        </div>
+                        <input type="hidden" name="subject" id="form-subject" value="Заявка на разработку">
                         <div class="form-group">
                             <label for="name" class="form-label">Ваше имя</label>
                             <input type="text" id="name" name="name" class="form-control" placeholder="Иван Иванов"

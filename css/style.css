@@ -809,8 +809,11 @@ ul {
     }
 
     .logo__text {
-        display: none;
-        /* Only show the bolt icon on very small screens */
+        font-size: 1rem;
+    }
+
+    .logo__icon {
+        font-size: 1.2rem;
     }
 
     .header__actions .btn {

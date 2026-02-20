@@ -66,17 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const phoneError = document.getElementById('phone-error');
     const formSuccess = document.getElementById('form-success');
 
-    if (contactForm) {
-        // Simple phone mask
+    // Make.com Webhook URL for Orders
+    // ВСТАВЬТЕ СЮДА ВАШ НОВЫЙ WEBHOOK ИЗ MAKE.COM ДЛЯ ФОРМЫ ЗАКАЗА
+    const MAKE_ORDER_WEBHOOK_URL = ''; // e.g. 'https://hook.eu1.make.com/xxxxxxxxxxxxxxxx'
+
+    if (contactForm && phoneInput && phoneError && formSuccess) {
+        // Phone mask (simplified)
         phoneInput.addEventListener('input', function (e) {
             let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
             if (!x[1]) return;
-            let formatted = '';
-            if (x[1] === '7' || x[1] === '8') {
-                formatted = '+7 ';
-            } else {
-                formatted = '+' + x[1] + ' ';
-            }
+            let formatted = '+7 ';
             if (x[2]) formatted += '(' + x[2];
             if (x[3]) formatted += ') ' + x[3];
             if (x[4]) formatted += '-' + x[4];
@@ -84,10 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
             e.target.value = formatted;
         });
 
-        contactForm.addEventListener('submit', function (e) {
+        contactForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            // Honeypot check
+            // Honeypot check for spam bots
             if (document.getElementById('contact_honey')?.value) return;
 
             // Basic validation
@@ -98,23 +97,63 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             phoneError.classList.remove('active');
 
-            // Simulate sending data
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Отправка...';
             submitBtn.disabled = true;
 
-            setTimeout(() => {
-                formSuccess.classList.add('active');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                contactForm.reset();
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const subject = document.getElementById('form-subject').value;
 
-                // Hide success message after 5 seconds
-                setTimeout(() => {
-                    formSuccess.classList.remove('active');
-                }, 5000);
-            }, 1000);
+            if (MAKE_ORDER_WEBHOOK_URL) {
+                try {
+                    const response = await fetch(MAKE_ORDER_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            phone: phone,
+                            subject: subject,
+                            source: window.location.hostname
+                        })
+                    });
+
+                    if (response.ok) {
+                        formSuccess.textContent = '🎉 Спасибо! Заявка отправлена. Мы скоро свяжемся с вами.';
+                        formSuccess.style.color = 'var(--success-color, #28a745)';
+                    } else {
+                        throw new Error('Network response was not ok.');
+                    }
+                } catch (error) {
+                    console.error('Error sending order:', error);
+                    formSuccess.textContent = '⚠️ Ошибка при отправке. Пожалуйста, напишите нам в Telegram.';
+                    formSuccess.style.color = '#dc3545';
+                }
+            } else {
+                // Simulation mode if webhook is not set
+                console.log('Simulation Mode: Order submitted', { name, phone, subject });
+                formSuccess.textContent = 'ℹ️ Тестовый режим: Заявка получена (Вебхук не настроен).';
+            }
+
+            formSuccess.classList.add('active');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+
+            // Only reset form if successful (or simulated)
+            if (MAKE_ORDER_WEBHOOK_URL === '' || formSuccess.textContent.includes('Спасибо') || formSuccess.textContent.includes('Тестовый')) {
+                contactForm.reset();
+                selectedPlan = null;
+                selectedUpsells.clear();
+                updateOrderUI(); // Reset the order container UI
+            }
+
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                formSuccess.classList.remove('active');
+            }, 6000);
         });
     }
 

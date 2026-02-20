@@ -162,17 +162,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     planButtons.forEach(btn => {
+        // Save original text to restore when deselected
+        if (!btn.getAttribute('data-original-text')) {
+            btn.setAttribute('data-original-text', btn.textContent);
+        }
+
         btn.addEventListener('click', function (e) {
             // Let the native anchor smooth scroll work, just update state
             const planName = this.getAttribute('data-plan');
-            selectedPlan = planName;
+
+            if (selectedPlan === planName) {
+                // Toggle off
+                selectedPlan = null;
+            } else {
+                // Toggle on
+                selectedPlan = planName;
+            }
+
+            // Update UI for all plan buttons
+            planButtons.forEach(pBtn => {
+                if (pBtn.getAttribute('data-plan') === selectedPlan) {
+                    pBtn.textContent = '✓ Выбран';
+                    pBtn.classList.remove('btn--outline');
+                    pBtn.classList.add('btn--primary');
+                } else {
+                    pBtn.textContent = pBtn.getAttribute('data-original-text');
+                    // "Бизнес" plan default is primary, others are outline. Let's restore defaults based on data attribute or just let CSS handle it.
+                    // Actually, the HTML structure: Business has btn--primary by default.
+                    if (pBtn.getAttribute('data-plan').includes('Бизнес')) {
+                        pBtn.classList.add('btn--primary');
+                        pBtn.classList.remove('btn--outline');
+                    } else {
+                        pBtn.classList.add('btn--outline');
+                        pBtn.classList.remove('btn--primary');
+                    }
+                }
+            });
+
             updateOrderUI();
 
-            // Highlight form
-            const orderForm = document.getElementById('contact-form');
-            if (orderForm) {
-                orderForm.style.boxShadow = '0 0 0 3px rgba(94, 23, 235, 0.3)';
-                setTimeout(() => orderForm.style.boxShadow = '', 1500);
+            // Highlight form only if adding
+            if (selectedPlan) {
+                const orderForm = document.getElementById('contact-form');
+                if (orderForm) {
+                    orderForm.style.boxShadow = '0 0 0 3px rgba(94, 23, 235, 0.3)';
+                    setTimeout(() => orderForm.style.boxShadow = '', 1500);
+                }
             }
         });
     });

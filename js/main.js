@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Make.com Webhook URL for Orders
     // ВСТАВЬТЕ СЮДА ВАШ НОВЫЙ WEBHOOK ИЗ MAKE.COM ДЛЯ ФОРМЫ ЗАКАЗА
-    const MAKE_ORDER_WEBHOOK_URL = ''; // e.g. 'https://hook.eu1.make.com/xxxxxxxxxxxxxxxx'
+    const MAKE_ORDER_WEBHOOK_URL = 'https://hook.us2.make.com/e87ed6i0di9p1qqdu6gdmmdxxe934fe9';
 
     if (contactForm && phoneInput && phoneError && formSuccess) {
         // Phone mask (simplified)

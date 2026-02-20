@@ -49,6 +49,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Form Validation and Submission ---
+    // --- Telegram Anti-Spam Button ---
+    const tgBtn = document.getElementById('tgBtn');
+    if (tgBtn) {
+        tgBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const encodedUser = this.getAttribute('data-tg');
+            if (encodedUser) {
+                window.open('https://t.me/' + atob(encodedUser), '_blank');
+            }
+        });
+    }
+
     const contactForm = document.getElementById('contact-form');
     const phoneInput = document.getElementById('phone');
     const phoneError = document.getElementById('phone-error');
@@ -74,6 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
+
+            // Honeypot check
+            if (document.getElementById('contact_honey')?.value) return;
 
             // Basic validation
             const phoneVal = phoneInput.value.replace(/\D/g, '');
@@ -142,6 +157,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle sending messages
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // Honeypot check
+            if (document.getElementById('chat_honey')?.value) return;
+
+            // Rate limiting: max 1 msg per 3 seconds
+            if (window._chatLastMsgTime && Date.now() - window._chatLastMsgTime < 3000) {
+                addMessage('Подождите пару секунд перед отправкой следующего сообщения 🕒', 'bot');
+                return;
+            }
+            window._chatLastMsgTime = Date.now();
+
             const messageText = chatInput.value.trim();
             if (!messageText) return;
 

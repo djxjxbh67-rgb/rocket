@@ -251,6 +251,10 @@
                         </ul>
                     </div>
                     <form class="order__form" id="contact-form">
+                        <!-- Скрытое поле от спам-ботов -->
+                        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                            <input type="text" name="_honey" id="contact_honey" tabindex="-1" autocomplete="off">
+                        </div>
                         <div class="form-group">
                             <label for="name" class="form-label">Ваше имя</label>
                             <input type="text" id="name" name="name" class="form-control" placeholder="Иван Иванов"
@@ -270,7 +274,9 @@
 
                     <div class="order__alternative">
                         <p>Не любите звонки? Обсудите проект текстом:</p>
-                        <a href="https://t.me/sergkane" target="_blank" class="btn btn--outline btn--telegram">
+                        <!-- Telegram ссылка закодирована в base64 (c2VyZ2thbmU=) для защиты от парсеров -->
+                        <a href="#" data-tg="c2VyZ2thbmU=" target="_blank" class="btn btn--outline btn--telegram"
+                            id="tgBtn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" style="margin-right: 8px;">
@@ -324,6 +330,10 @@
             </div>
 
             <form class="chat-window__input-area" id="chatForm">
+                <!-- Скрытое поле от спам-ботов -->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" name="_honey" id="chat_honey" tabindex="-1" autocomplete="off">
+                </div>
                 <input type="text" id="chatInput" placeholder="Напишите сообщение..." required autocomplete="off">
                 <button type="submit" aria-label="Send Message" class="btn btn--primary"
                     style="padding: 0.5rem; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">

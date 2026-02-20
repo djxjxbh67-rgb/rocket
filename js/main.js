@@ -192,14 +192,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                     });
 
-                    const data = await response.json();
+                    const rawText = await response.text();
                     removeTypingIndicator(typingIndicatorId);
 
-                    // Предполагается, что Make.com вернет JSON с полем { "reply": "Текст ответа" }
-                    if (data && data.reply) {
-                        addMessage(data.reply, 'bot');
-                    } else {
-                        addMessage('Извините, я получил пустой ответ от сервера.', 'bot');
+                    try {
+                        // Тот случай, когда Make.com смог вернуть правильный JSON
+                        const data = JSON.parse(rawText);
+                        if (data && data.reply) {
+                            addMessage(data.reply, 'bot');
+                        } else {
+                            addMessage('Извините, я получил пустой ответ от сервера.', 'bot');
+                        }
+                    } catch (parseError) {
+                        // Если JSON сломался из-за кавычек (invalid JSON), мы просто берем весь сырой текст!
+                        if (rawText && rawText.trim().length > 0) {
+                            addMessage(rawText, 'bot');
+                        } else {
+                            addMessage('Извините, я получил пустой ответ от сервера.', 'bot');
+                        }
                     }
                 } catch (error) {
                     removeTypingIndicator(typingIndicatorId);

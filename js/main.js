@@ -192,9 +192,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function addMessage(text, sender) {
+        // Clean up text formatting from AI
+        let formattedText = text || '';
+
+        // 1. Convert Markdown bold
+        formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+        // 2. Convert Markdown bullet lists
+        formattedText = formattedText.replace(/(?:^|<br>)\s*\*\s+(.*?)(?=<br>|$)/g, '<br>• $1');
+
+        // 3. Clean up excessive line breaks (replace 3+ breaks with just 2 for a single paragraph gap)
+        formattedText = formattedText.replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>');
+
+        // 4. Clean up breaks at the very beginning or end
+        formattedText = formattedText.replace(/^(<br\s*\/?>)+|(<br\s*\/?>)+$/gi, '');
+
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('chat-message', `chat-message--${sender}`);
-        messageDiv.innerHTML = text; // allow basic HTML like <br> or <b> from bot
+        messageDiv.innerHTML = formattedText;
         chatMessages.appendChild(messageDiv);
         scrollToBottom();
     }

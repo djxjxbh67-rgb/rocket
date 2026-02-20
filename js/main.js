@@ -119,39 +119,96 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // Upsell Buttons Logic
+    // Dynamic Order Form Logic
     // ==========================================
     const upsellButtons = document.querySelectorAll('.btn--upsell');
+    const planButtons = document.querySelectorAll('.btn--plan');
     const formSubjectInput = document.getElementById('form-subject');
-    const selectedUpsellMsg = document.getElementById('selected-upsell-msg');
-    const upsellNameSpan = document.getElementById('upsell-name');
+    const selectedItemsContainer = document.getElementById('selected-items-container');
+    const selectedItemsList = document.getElementById('selected-items-list');
+
+    let selectedPlan = null;
+    let selectedUpsells = new Set();
+
+    function updateOrderUI() {
+        if (!selectedItemsContainer || !selectedItemsList || !formSubjectInput) return;
+
+        selectedItemsList.innerHTML = '';
+        let subjectParts = [];
+
+        if (selectedPlan) {
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>Тариф:</strong> ${selectedPlan}`;
+            selectedItemsList.appendChild(li);
+            subjectParts.push(`Тариф: ${selectedPlan}`);
+        }
+
+        if (selectedUpsells.size > 0) {
+            selectedUpsells.forEach(upsell => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Доп. услуга:</strong> ${upsell}`;
+                selectedItemsList.appendChild(li);
+                subjectParts.push(`Доп: ${upsell}`);
+            });
+        }
+
+        if (selectedPlan || selectedUpsells.size > 0) {
+            selectedItemsContainer.style.display = 'block';
+            formSubjectInput.value = subjectParts.join(' | ');
+        } else {
+            selectedItemsContainer.style.display = 'none';
+            formSubjectInput.value = 'Заявка на разработку';
+        }
+    }
+
+    planButtons.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            // Let the native anchor smooth scroll work, just update state
+            const planName = this.getAttribute('data-plan');
+            selectedPlan = planName;
+            updateOrderUI();
+
+            // Highlight form
+            const orderForm = document.getElementById('contact-form');
+            if (orderForm) {
+                orderForm.style.boxShadow = '0 0 0 3px rgba(94, 23, 235, 0.3)';
+                setTimeout(() => orderForm.style.boxShadow = '', 1500);
+            }
+        });
+    });
 
     upsellButtons.forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             const upsellName = this.getAttribute('data-upsell');
 
-            if (formSubjectInput && selectedUpsellMsg && upsellNameSpan) {
-                // Update form subject to include the upsell
-                formSubjectInput.value = `Заявка с апселлом: ${upsellName}`;
+            if (selectedUpsells.has(upsellName)) {
+                // Remove it
+                selectedUpsells.delete(upsellName);
+                this.textContent = 'Добавить к заказу';
+                this.classList.remove('btn--primary');
+                this.classList.add('btn--outline');
+            } else {
+                // Add it
+                selectedUpsells.add(upsellName);
+                this.textContent = '✓ Убрать из заказа';
+                this.classList.remove('btn--outline');
+                this.classList.add('btn--primary');
 
-                // Show the message to the user
-                upsellNameSpan.textContent = upsellName;
-                selectedUpsellMsg.style.display = 'block';
-
-                // Scroll to the order form smoothly
+                // Scroll to order form ONLY when adding
                 const orderSection = document.getElementById('order');
                 if (orderSection) {
                     orderSection.scrollIntoView({ behavior: 'smooth' });
                 }
 
-                // Optionally visually highlight the form
+                // Highlight form
                 const orderForm = document.getElementById('contact-form');
                 if (orderForm) {
                     orderForm.style.boxShadow = '0 0 0 3px rgba(94, 23, 235, 0.3)';
                     setTimeout(() => orderForm.style.boxShadow = '', 1500);
                 }
             }
+            updateOrderUI();
         });
     });
 

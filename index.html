@@ -268,7 +268,8 @@
                             <li>Базовая SEO-настройка</li>
                             <li>Срок: 1 день</li>
                         </ul>
-                        <a href="#order" class="btn btn--outline btn--full">Выбрать</a>
+                        <a href="#order" class="btn btn--outline btn--full btn--plan"
+                            data-plan="Быстрый старт (5 000 ₽)">Выбрать</a>
                     </div>
                     <div class="pricing-card pricing-card--featured">
                         <div class="pricing-card__badge">Хит продаж</div>
@@ -281,7 +282,8 @@
                             <li>Микроанимации</li>
                             <li>Срок: до 3 дней</li>
                         </ul>
-                        <a href="#order" class="btn btn--primary btn--full">Выбрать</a>
+                        <a href="#order" class="btn btn--primary btn--full btn--plan"
+                            data-plan="Бизнес (15 000 ₽)">Выбрать</a>
                     </div>
                     <div class="pricing-card">
                         <h3 class="pricing-card__title">👑 Премиум</h3>
@@ -294,7 +296,8 @@
                             <li>Интеграция с любой CRM</li>
                             <li>Срок: обсуждается</li>
                         </ul>
-                        <a href="#order" class="btn btn--outline btn--full">Обсудить</a>
+                        <a href="#order" class="btn btn--outline btn--full btn--plan"
+                            data-plan="Премиум (от 30 000 ₽)">Обсудить</a>
                     </div>
                 </div>
             </div>
@@ -319,10 +322,13 @@
                             <input type="text" name="_honey" id="contact_honey" tabindex="-1" autocomplete="off">
                         </div>
 
-                        <!-- Выбранный пакет (скрыто по умолчанию) -->
-                        <div id="selected-upsell-msg"
-                            style="display:none; color: var(--accent); margin-bottom: 1rem; font-weight: 600; text-align: center; border: 1px solid var(--accent); padding: 0.5rem; border-radius: 8px;">
-                            🛒 Добавлено к заказу: <span id="upsell-name"></span>
+                        <!-- Выбранные услуги (скрыто по умолчанию) -->
+                        <div id="selected-items-container"
+                            style="display:none; color: var(--text-primary); margin-bottom: 1.5rem; text-align: left; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--accent);">🛒 Ваш заказ:
+                            </div>
+                            <ul id="selected-items-list" style="margin: 0; padding-left: 1.5rem; font-size: 0.95rem;">
+                            </ul>
                         </div>
                         <input type="hidden" name="subject" id="form-subject" value="Заявка на разработку">
                         <div class="form-group">

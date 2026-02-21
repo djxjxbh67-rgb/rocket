@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -11,11 +11,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+        rel="stylesheet">
+  <script type="module" crossorigin src="/rocket/assets/main-C2BUS_zZ.js"></script>
+  <link rel="stylesheet" crossorigin href="/rocket/assets/main-PKYxFm3c.css">
 </head>
 
 <body>
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
     <header class="header">
         <div class="container header__container">
             <a href="#" class="logo">
@@ -58,7 +61,7 @@
     <main>
         <!-- Hero Section -->
         <section class="hero" id="home">
-            <div class="container hero__container">
+            <div class="container hero__container" style="position: relative; z-index: 2;">
                 <div class="hero__content">
                     <div class="badge">🔥 Специальное предложение</div>
                     <h1 class="hero__title">Твой идеальный лендинг.<br><span class="text-gradient">За 1 день. От 5000
@@ -69,10 +72,6 @@
                         <a href="#order" class="btn btn--primary">Обсудить проект</a>
                         <a href="#portfolio" class="btn btn--outline">Смотреть работы</a>
                     </div>
-                </div>
-                <div class="hero__visual">
-                    <!-- Placeholder for the 3D abstract shape -->
-                    <div class="abstract-shape"></div>
                 </div>
             </div>
         </section>
@@ -113,6 +112,38 @@
                 </div>
             </div>
         </section>
+
+        <!-- Niches/Experts Section -->
+        <section class="niches section bg-secondary" id="niches">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title">Сайты для экспертов</h2>
+                    <p class="section-subtitle">Персональная страница с ИИ-генерацией лидов для вашей ниши.</p>
+                </div>
+                <div class="niches__grid">
+                    <div class="niche-card">
+                        <div class="niche-card__icon">🏠</div>
+                        <h3>Риэлторы</h3>
+                        <p>Каталог объектов и умная анкета для подбора недвижимости.</p>
+                    </div>
+                    <div class="niche-card">
+                        <div class="niche-card__icon">⚖️</div>
+                        <h3>Юристы</h3>
+                        <p>Сбор заявок, описание услуг и автоматическая запись на консультацию.</p>
+                    </div>
+                    <div class="niche-card">
+                        <div class="niche-card__icon">🎯</div>
+                        <h3>Коучи</h3>
+                        <p>Презентация программ, продажа курсов и интеграция с календарем.</p>
+                    </div>
+                    <div class="niche-card">
+                        <div class="niche-card__icon">🎨</div>
+                        <h3>Творцы</h3>
+                        <p>Эффектное портфолио для дизайнеров, фотографов и тату-мастеров.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- Portfolio Section (Hybrid Dark) -->
         <section class="portfolio section" id="portfolio">
             <div class="container">
@@ -125,7 +156,7 @@
                     <a href="https://djxjxbh67-rgb.github.io/salonaura/" target="_blank"
                         class="portfolio-item hover-scroll">
                         <div class="portfolio-item__image mockup-wrapper">
-                            <img src="images/salon-mockup.png" alt="Салон красоты Aura" class="mockup-img">
+                            <img src="/rocket/assets/salon-mockup-BivWBYgG.png" alt="Салон красоты Aura" class="mockup-img">
                         </div>
                         <div class="portfolio-item__content">
                             <h3>Салон красоты <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -141,7 +172,7 @@
                     </a>
                     <a href="https://schastevteste.ru" target="_blank" class="portfolio-item hover-scroll">
                         <div class="portfolio-item__image mockup-wrapper">
-                            <img src="images/pizzeria-mockup.png" alt="СчастьеВТесте" class="mockup-img">
+                            <img src="/rocket/assets/pizzeria-mockup-Bmzq-Nuf.png" alt="СчастьеВТесте" class="mockup-img">
                         </div>
                         <div class="portfolio-item__content">
                             <h3>Доставка пиццы <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -158,7 +189,7 @@
                     <a href="https://djxjxbh67-rgb.github.io/kuhni/" target="_blank"
                         class="portfolio-item hover-scroll">
                         <div class="portfolio-item__image mockup-wrapper">
-                            <img src="images/furniture-mockup.png" alt="Мебельная фабрика" class="mockup-img">
+                            <img src="/rocket/assets/furniture-mockup-s0ovBaqJ.png" alt="Мебельная фабрика" class="mockup-img">
                         </div>
                         <div class="portfolio-item__content">
                             <h3>Мебельная фабрика <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -172,6 +203,23 @@
                             <p>Премиальный каталог, 3D-модели и захват B2B клиентов.</p>
                         </div>
                     </a>
+                    <a href="https://djxjxbh67-rgb.github.io/realty" target="_blank"
+                        class="portfolio-item hover-scroll">
+                        <div class="portfolio-item__image mockup-wrapper">
+                            <img src="/rocket/assets/portfolio_realtor-DQxecb93.png" alt="Сайт для Риэлтора" class="mockup-img">
+                        </div>
+                        <div class="portfolio-item__content">
+                            <h3>Сайт Риэлтора <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    style="margin-left:4px; opacity:0.6;">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg></h3>
+                            <p>Каталог объектов и умная анкета для подбора недвижимости.</p>
+                        </div>
+                    </a>
                 </div>
 
                 <!-- Free First Draft Offer Banner -->
@@ -182,6 +230,37 @@
                             структуру и дизайн первого экрана для вашего будущего сайта. Понравится — продолжим работу.
                         </p>
                         <a href="#order" class="btn btn--primary">Хочу бесплатный эскиз</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upsell Section -->
+        <section class="upsell section bg-secondary" id="upsell">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title">Усильте маркетинг с ИИ</h2>
+                    <p class="section-subtitle">Дополнительные пакеты генеративного контента для роста ваших продаж.</p>
+                </div>
+                <div class="upsell__grid">
+                    <div class="upsell-card">
+                        <div class="upsell-card__badge">Популярно</div>
+                        <div class="upsell-card__icon">📝</div>
+                        <h3 class="upsell-card__title">AI Контент-план</h3>
+                        <p class="upsell-card__text">Разработка контент-плана и написание постов для ваших соцсетей с
+                            помощью нейросетей на месяц вперед.</p>
+                        <div class="upsell-card__price">от 7 000 ₽</div>
+                        <button class="btn btn--outline btn--upsell" data-upsell="AI Контент-план">Добавить к
+                            заказу</button>
+                    </div>
+                    <div class="upsell-card">
+                        <div class="upsell-card__icon">🎬</div>
+                        <h3 class="upsell-card__title">Генерация Изображений и Видео</h3>
+                        <p class="upsell-card__text">Создание уникальных премиальных изображений и видеоматериалов для
+                            ваших постов, статей и рекламы.</p>
+                        <div class="upsell-card__price">от 1 000 ₽</div>
+                        <button class="btn btn--outline btn--upsell"
+                            data-upsell="AI генерация изображений и видео">Добавить к заказу</button>
                     </div>
                 </div>
             </div>
@@ -205,7 +284,8 @@
                             <li>Базовая SEO-настройка</li>
                             <li>Срок: 1 день</li>
                         </ul>
-                        <a href="#order" class="btn btn--outline btn--full">Выбрать</a>
+                        <a href="#order" class="btn btn--outline btn--full btn--plan"
+                            data-plan="Быстрый старт (5 000 ₽)">Выбрать</a>
                     </div>
                     <div class="pricing-card pricing-card--featured">
                         <div class="pricing-card__badge">Хит продаж</div>
@@ -218,7 +298,8 @@
                             <li>Микроанимации</li>
                             <li>Срок: до 3 дней</li>
                         </ul>
-                        <a href="#order" class="btn btn--primary btn--full">Выбрать</a>
+                        <a href="#order" class="btn btn--primary btn--full btn--plan"
+                            data-plan="Бизнес (15 000 ₽)">Выбрать</a>
                     </div>
                     <div class="pricing-card">
                         <h3 class="pricing-card__title">👑 Премиум</h3>
@@ -231,7 +312,8 @@
                             <li>Интеграция с любой CRM</li>
                             <li>Срок: обсуждается</li>
                         </ul>
-                        <a href="#order" class="btn btn--outline btn--full">Обсудить</a>
+                        <a href="#order" class="btn btn--outline btn--full btn--plan"
+                            data-plan="Премиум (от 30 000 ₽)">Обсудить</a>
                     </div>
                 </div>
             </div>
@@ -251,6 +333,20 @@
                         </ul>
                     </div>
                     <form class="order__form" id="contact-form">
+                        <!-- Скрытое поле от спам-ботов -->
+                        <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                            <input type="text" name="_honey" id="contact_honey" tabindex="-1" autocomplete="off">
+                        </div>
+
+                        <!-- Выбранные услуги (скрыто по умолчанию) -->
+                        <div id="selected-items-container"
+                            style="display:none; color: var(--text-primary); margin-bottom: 1.5rem; text-align: left; background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--accent);">🛒 Ваш заказ:
+                            </div>
+                            <ul id="selected-items-list" style="margin: 0; padding-left: 1.5rem; font-size: 0.95rem;">
+                            </ul>
+                        </div>
+                        <input type="hidden" name="subject" id="form-subject" value="Заявка на разработку">
                         <div class="form-group">
                             <label for="name" class="form-label">Ваше имя</label>
                             <input type="text" id="name" name="name" class="form-control" placeholder="Иван Иванов"
@@ -270,7 +366,9 @@
 
                     <div class="order__alternative">
                         <p>Не любите звонки? Обсудите проект текстом:</p>
-                        <a href="https://t.me/your_telegram_bot" target="_blank" class="btn btn--outline btn--telegram">
+                        <!-- Telegram ссылка закодирована в base64 (c2VyZ2thbmU=) для защиты от парсеров -->
+                        <a href="#" data-tg="c2VyZ2thbmU=" target="_blank" class="btn btn--outline btn--telegram"
+                            id="tgBtn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" style="margin-right: 8px;">
@@ -324,6 +422,10 @@
             </div>
 
             <form class="chat-window__input-area" id="chatForm">
+                <!-- Скрытое поле от спам-ботов -->
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                    <input type="text" name="_honey" id="chat_honey" tabindex="-1" autocomplete="off">
+                </div>
                 <input type="text" id="chatInput" placeholder="Напишите сообщение..." required autocomplete="off">
                 <button type="submit" aria-label="Send Message" class="btn btn--primary"
                     style="padding: 0.5rem; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">
@@ -337,7 +439,7 @@
         </div>
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

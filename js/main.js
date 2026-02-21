@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const moonIcon = document.querySelector('.moon-icon');
 
     // Check local storage or system preference
-    const currentTheme = localStorage.getItem('theme') ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
 
     // Set initial theme
     const setTheme = (theme) => {

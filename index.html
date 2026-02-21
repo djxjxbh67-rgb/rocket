@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="light">
+<html lang="ru" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -16,6 +16,8 @@
 </head>
 
 <body>
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
     <header class="header">
         <div class="container header__container">
             <a href="#" class="logo">
@@ -58,7 +60,7 @@
     <main>
         <!-- Hero Section -->
         <section class="hero" id="home">
-            <div class="container hero__container">
+            <div class="container hero__container" style="position: relative; z-index: 2;">
                 <div class="hero__content">
                     <div class="badge">🔥 Специальное предложение</div>
                     <h1 class="hero__title">Твой идеальный лендинг.<br><span class="text-gradient">За 1 день. От 5000
@@ -69,10 +71,6 @@
                         <a href="#order" class="btn btn--primary">Обсудить проект</a>
                         <a href="#portfolio" class="btn btn--outline">Смотреть работы</a>
                     </div>
-                </div>
-                <div class="hero__visual">
-                    <!-- Placeholder for the 3D abstract shape -->
-                    <div class="abstract-shape"></div>
                 </div>
             </div>
         </section>
@@ -441,6 +439,7 @@
     </div>
 
     <script src="js/main.js"></script>
+    <script type="module" src="/js/Scene.jsx"></script>
 </body>
 
 </html>

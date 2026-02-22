@@ -286,6 +286,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
+    // FAQ Accordion Logic
+    // ==========================================
+    const faqQuestions = document.querySelectorAll('.faq-item__question');
+
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', () => {
+            const faqItem = question.parentElement;
+            const isExpanded = question.getAttribute('aria-expanded') === 'true';
+
+            // Close all other accordions
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.querySelector('.faq-item__question')) {
+                    item.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Toggle current
+            if (!isExpanded) {
+                faqItem.classList.add('active');
+                question.setAttribute('aria-expanded', 'true');
+            }
+        });
+    });
+
+    // ==========================================
     // AI Chat Widget Logic
     // ==========================================
     const chatToggle = document.getElementById('chatToggle');

@@ -1248,6 +1248,42 @@ ul {
     }
 }
 
+/* --- FAQ Section --- */
+.faq__grid {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.faq-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.faq-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+}
+
+.faq-item__question {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.faq-item__answer p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
 /* --- Dark Mode Chat Overrides --- */
 [data-theme="dark"] .chat-window {
     background: var(--bg-primary);

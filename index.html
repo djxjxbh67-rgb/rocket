@@ -16,6 +16,19 @@
 </head>
 
 <body>
+    <!-- Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="preloader__content">
+            <div class="preloader__logo">
+                <span class="logo__icon">⚡</span>
+                <span class="logo__text">RocketLanding</span>
+            </div>
+            <div class="preloader__bar">
+                <div class="preloader__progress" id="preloader-progress"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- 3D Canvas Container -->
     <div id="canvas-container"></div>
     <header class="header">
@@ -78,12 +91,12 @@
         <!-- Benefits Section -->
         <section class="benefits section" id="benefits">
             <div class="container">
-                <div class="section-header text-center">
+                <div class="section-header text-center reveal">
                     <h2 class="section-title">Почему выбирают нас</h2>
                     <p class="section-subtitle">Мы сломали стереотип "быстро, дешево, качественно — выберите два". У нас
                         есть всё.</p>
                 </div>
-                <div class="benefits__grid">
+                <div class="benefits__grid reveal">
                     <div class="benefit-card">
                         <div class="benefit-card__icon">⏱️</div>
                         <h3 class="benefit-card__title">Скорость. За 1 день.</h3>
@@ -112,14 +125,16 @@
             </div>
         </section>
 
+
+
         <!-- Niches/Experts Section -->
         <section class="niches section bg-secondary" id="niches">
             <div class="container">
-                <div class="section-header text-center">
+                <div class="section-header text-center reveal">
                     <h2 class="section-title">Разработка сайтов для экспертов</h2>
                     <p class="section-subtitle">Персональная страница с ИИ-генерацией лидов для вашей ниши.</p>
                 </div>
-                <div class="niches__grid">
+                <div class="niches__grid reveal">
                     <div class="niche-card">
                         <div class="niche-card__icon">🏠</div>
                         <h3>Риэлторы</h3>
@@ -146,12 +161,12 @@
         <!-- Portfolio Section (Hybrid Dark) -->
         <section class="portfolio section" id="portfolio">
             <div class="container">
-                <div class="section-header text-center">
+                <div class="section-header text-center reveal">
                     <h2 class="section-title">Наши работы</h2>
                     <p class="section-subtitle">Сайты, которые продают. Изучите наши недавние проекты и их результаты.
                     </p>
                 </div>
-                <div class="portfolio__grid">
+                <div class="portfolio__grid reveal">
                     <a href="https://djxjxbh67-rgb.github.io/salonaura/" target="_blank" rel="noopener noreferrer"
                         class="portfolio-item hover-scroll">
                         <div class="portfolio-item__image mockup-wrapper">
@@ -227,7 +242,7 @@
                 </div>
 
                 <!-- Free First Draft Offer Banner -->
-                <div class="portfolio__offer-banner">
+                <div class="portfolio__offer-banner reveal">
                     <div class="offer-banner__content">
                         <h3>Хотите такой же результат?</h3>
                         <p>Мы уверены в своем качестве. Оставьте заявку, и мы <strong>бесплатно</strong> соберем
@@ -242,11 +257,11 @@
         <!-- Upsell Section -->
         <section class="upsell section bg-secondary" id="upsell">
             <div class="container">
-                <div class="section-header text-center">
+                <div class="section-header text-center reveal">
                     <h2 class="section-title">Усильте маркетинг с ИИ</h2>
                     <p class="section-subtitle">Дополнительные пакеты генеративного контента для роста ваших продаж.</p>
                 </div>
-                <div class="upsell__grid">
+                <div class="upsell__grid reveal">
                     <div class="upsell-card">
                         <div class="upsell-card__badge">Популярно</div>
                         <div class="upsell-card__icon">📝</div>
@@ -273,11 +288,11 @@
         <!-- Pricing Section -->
         <section class="pricing section" id="pricing">
             <div class="container">
-                <div class="section-header text-center">
+                <div class="section-header text-center reveal">
                     <h2 class="section-title">Прозрачные тарифы</h2>
                     <p class="section-subtitle">Выберите пакет, который идеально подходит вашим задачам.</p>
                 </div>
-                <div class="pricing__grid">
+                <div class="pricing__grid reveal">
                     <div class="pricing-card">
                         <h3 class="pricing-card__title">🚀 Быстрый старт</h3>
                         <div class="pricing-card__price">5 000 ₽</div>
@@ -325,7 +340,7 @@
         <!-- Order Form Section -->
         <section class="order section" id="order">
             <div class="container">
-                <div class="order__inner">
+                <div class="order__inner reveal">
                     <div class="order__content">
                         <h2 class="section-title">Заказать лендинг: готовы к взлёту?</h2>
                         <p class="section-subtitle" style="margin-left: 0;">Оставьте заявку, и мы свяжемся с вами в
@@ -386,7 +401,7 @@
         </section>
 
         <!-- Value Proposition / Beyond Landing Pages -->
-        <section class="value-prop section bg-secondary" id="value-prop">
+        <section class="value-prop section bg-secondary reveal" id="value-prop">
             <div class="container">
                 <div class="value-prop__banner">
                     <h2>Больше, чем просто лендинг</h2>
@@ -400,11 +415,11 @@
         <!-- FAQ Section (Accordion) -->
         <section class="faq section" id="faq" style="padding-top: 4rem;">
             <div class="container">
-                <div class="section-header text-center">
+                <div class="section-header text-center reveal">
                     <h2 class="section-title">Частые вопросы по разработке лендингов</h2>
                     <p class="section-subtitle">Отвечаем на самые популярные вопросы наших клиентов.</p>
                 </div>
-                <div class="faq__grid" itemscope itemtype="https://schema.org/FAQPage">
+                <div class="faq__grid reveal" itemscope itemtype="https://schema.org/FAQPage">
                     <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                         <button class="faq-item__question" itemprop="name" aria-expanded="false">
                             Как происходит разработка лендинга за 1 день?

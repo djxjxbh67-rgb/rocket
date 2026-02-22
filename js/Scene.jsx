@@ -1,6 +1,6 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, Sparkles, Points, PointMaterial } from '@react-three/drei';
+import { Float, Sparkles, Points, PointMaterial, useProgress } from '@react-three/drei';
 import * as THREE from 'three';
 import { createRoot } from 'react-dom/client';
 import gsap from 'gsap';
@@ -154,9 +154,46 @@ function App() {
         <div style={{ width: '100%', height: '100%' }}>
             <Canvas camera={{ position: [0, 0, 8], fov: 45 }} dpr={[1, 2]}> {/* Cap DPR for performance */}
                 <Scene />
+                <GlobalLoader />
             </Canvas>
         </div>
     );
+}
+
+// Preloader Integration
+function GlobalLoader() {
+    const { progress, active } = useProgress();
+
+    useEffect(() => {
+        const progressBar = document.getElementById('preloader-progress');
+        if (progressBar) {
+            progressBar.style.width = progress > 0 ? `${progress}%` : '100%';
+        }
+
+        const hidePreloader = () => {
+            const preloader = document.getElementById('preloader');
+            if (preloader && !preloader.classList.contains('hidden')) {
+                preloader.classList.add('hidden');
+                // Completely remove from DOM after transition
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 800);
+            }
+        };
+
+        // Hide if fully loaded OR if not active (meaning nothing to load)
+        if (progress === 100 || (!active && progress === 0)) {
+            setTimeout(hidePreloader, 500);
+        }
+
+        // Fallback: forcefully hide after 1.5 seconds no matter what
+        const fallbackId = setTimeout(hidePreloader, 1500);
+
+        return () => clearTimeout(fallbackId);
+
+    }, [progress, active]);
+
+    return null;
 }
 
 // Inject into HTML

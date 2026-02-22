@@ -1430,3 +1430,206 @@ ul {
         height: auto;
     }
 }
+
+/* ==========================================
+   Premium UI Enhancements
+========================================== */
+
+/* --- Reveal on Scroll --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger children in grids if they share reveal class */
+.benefits__grid.active .benefit-card,
+.niches__grid.active .niche-card,
+.portfolio__grid.active .portfolio-item,
+.upsell__grid.active .upsell-card,
+.pricing__grid.active .pricing-card {
+    animation: fadeUpStagger 0.6s cubic-bezier(0.5, 0, 0, 1) forwards;
+    opacity: 0;
+}
+
+.benefits__grid.active .benefit-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.benefits__grid.active .benefit-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.benefits__grid.active .benefit-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.benefits__grid.active .benefit-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.niches__grid.active .niche-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.niches__grid.active .niche-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.niches__grid.active .niche-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.niches__grid.active .niche-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.portfolio__grid.active .portfolio-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.portfolio__grid.active .portfolio-item:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.portfolio__grid.active .portfolio-item:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.portfolio__grid.active .portfolio-item:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.upsell__grid.active .upsell-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.upsell__grid.active .upsell-card:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.pricing__grid.active .pricing-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.pricing__grid.active .pricing-card:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.pricing__grid.active .pricing-card:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+@keyframes fadeUpStagger {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Preloader --- */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.preloader__content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.preloader__logo {
+    font-size: 2rem;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.preloader__bar {
+    width: 200px;
+    height: 4px;
+    background: var(--bg-secondary);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.preloader__progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.2s ease;
+}
+
+
+
+/* --- Glow Cards (Spotlight Effect) --- */
+.pricing-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.pricing-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+            rgba(94, 23, 235, 0.08),
+            transparent 40%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+    pointer-events: none;
+}
+
+[data-theme="dark"] .pricing-card::before {
+    background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+            rgba(94, 23, 235, 0.25),
+            transparent 40%);
+}
+
+.pricing-card:hover::before {
+    opacity: 1;
+}
+
+.pricing-card>* {
+    position: relative;
+    z-index: 1;
+}

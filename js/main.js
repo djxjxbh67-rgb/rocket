@@ -1,4 +1,76 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // Smart Header / Nav (Hide on scroll down)
+    // ==========================================
+    const header = document.querySelector('.header');
+    if (header) {
+        header.style.transition = 'transform 0.3s ease, background 0.3s ease';
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const currentScrollY = window.scrollY;
+
+                    if (currentScrollY > 100) {
+                        // Scrolling down
+                        if (currentScrollY > lastScrollY) {
+                            header.style.transform = 'translateY(-100%)';
+                        }
+                        // Scrolling up
+                        else if (currentScrollY < lastScrollY) {
+                            header.style.transform = 'translateY(0)';
+                        }
+                    } else {
+                        // Always show at the top
+                        header.style.transform = 'translateY(0)';
+                    }
+
+                    lastScrollY = currentScrollY;
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+
+    // ==========================================
+    // Reveal on Scroll (Intersection Observer)
+    // ==========================================
+    const revealElements = document.querySelectorAll('.reveal');
+    if (revealElements.length > 0) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Trigger only once
+                }
+            });
+        }, {
+            root: null,
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+    }
+
+    // ==========================================
+    // Glow Cards (Spotlight Effect)
+    // ==========================================
+    const pricingCards = document.querySelectorAll('.pricing-card');
+    pricingCards.forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+
     // --- Theme Toggle Logic ---
     const themeToggleBtn = document.getElementById('theme-toggle');
     const htmlElement = document.documentElement;

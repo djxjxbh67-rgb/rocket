@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         btn.addEventListener('click', function (e) {
-            // Let the native anchor smooth scroll work, just update state
+            e.preventDefault();
             const planName = this.getAttribute('data-plan');
 
             if (selectedPlan === planName) {
@@ -311,8 +311,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateOrderUI();
 
-            // Highlight form only if adding
+            // Scroll down and Highlight form if adding
             if (selectedPlan) {
+                const orderSection = document.getElementById('order');
+                if (orderSection) {
+                    orderSection.scrollIntoView({ behavior: 'smooth' });
+                }
                 const orderForm = document.getElementById('contact-form');
                 if (orderForm) {
                     orderForm.style.boxShadow = '0 0 0 3px rgba(94, 23, 235, 0.3)';
@@ -382,6 +386,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // ==========================================
+    // Mobile Menu Logic
+    // ==========================================
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const nav = document.querySelector('.nav');
+    if (mobileMenuBtn && nav) {
+        mobileMenuBtn.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+
+        const navLinks = nav.querySelectorAll('.nav__link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+            });
+        });
+    }
 
     // ==========================================
     // AI Chat Widget Logic

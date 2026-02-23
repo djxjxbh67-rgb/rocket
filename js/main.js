@@ -421,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Make.com Polling Endpoint — для получения ответов оператора
     // ВСТАВЬТЕ СЮДА URL ВАШЕГО POLLING WEBHOOK ПОСЛЕ СОЗДАНИЯ СЦЕНАРИЯ В MAKE.COM
-    const MAKE_POLL_URL = '';
+    const MAKE_POLL_URL = 'https://hook.us2.make.com/sz1nym7wju5fqkuijkl8k5udjp7546ip';
 
     // Generate a unique session ID for the chat when the page loads
     const CHAT_SESSION_ID = Date.now().toString(36) + Math.random().toString(36).substring(2);

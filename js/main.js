@@ -427,10 +427,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const CHAT_SESSION_ID = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
     let pollIntervalId = null;
+    let handoffActive = false; // Polling запускается ТОЛЬКО после handoff
 
     // --- Operator Polling ---
     function startPolling() {
-        if (!MAKE_POLL_URL || pollIntervalId) return;
+        if (!MAKE_POLL_URL || pollIntervalId || !handoffActive) return;
         pollIntervalId = setInterval(async () => {
             try {
                 const res = await fetch(MAKE_POLL_URL, {
@@ -445,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) {
                 // Тихо проглатываем ошибки polling
             }
-        }, 5000); // Каждые 5 секунд
+        }, 10000); // Каждые 10 секунд (экономия кредитов)
     }
 
     function stopPolling() {
@@ -460,7 +461,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chatToggle.addEventListener('click', () => {
             chatWindow.classList.add('is-open');
             setTimeout(() => chatInput.focus(), 300);
-            startPolling();
+            // НЕ запускаем polling при открытии! Только после handoff.
+            if (handoffActive) startPolling();
         });
 
         // Close chat window
@@ -522,6 +524,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Тот случай, когда Make.com смог вернуть правильный JSON
                         const data = JSON.parse(rawText);
                         if (data && data.reply) {
+                            // Активируем polling только при handoff
+                            if (data.reply.includes('[HANDOFF]') || data.reply.includes('передано менеджеру')) {
+                                handoffActive = true;
+                                startPolling();
+                            }
                             addMessage(data.reply, 'bot');
                         } else {
                             addMessage('Извините, я получил пустой ответ от сервера.', 'bot');

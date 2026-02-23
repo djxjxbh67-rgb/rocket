@@ -419,25 +419,61 @@ document.addEventListener('DOMContentLoaded', () => {
     // ВСТАВЬТЕ СЮДА ВАШ WEBHOOK ИЗ MAKE.COM, НАПРИМЕР: 'https://hook.eu1.make.com/xxxxxxxxxxxxxxxxxxxxxxxxxxx'
     const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/n627zty7p6legfvvnxsp5ueuy96ud4u7';
 
+    // Make.com Polling Endpoint — для получения ответов оператора
+    // ВСТАВЬТЕ СЮДА URL ВАШЕГО POLLING WEBHOOK ПОСЛЕ СОЗДАНИЯ СЦЕНАРИЯ В MAKE.COM
+    const MAKE_POLL_URL = '';
+
     // Generate a unique session ID for the chat when the page loads
     const CHAT_SESSION_ID = Date.now().toString(36) + Math.random().toString(36).substring(2);
+
+    let pollIntervalId = null;
+
+    // --- Operator Polling ---
+    function startPolling() {
+        if (!MAKE_POLL_URL || pollIntervalId) return;
+        pollIntervalId = setInterval(async () => {
+            try {
+                const res = await fetch(MAKE_POLL_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId: CHAT_SESSION_ID })
+                });
+                const data = await res.json();
+                if (data && data.operator) {
+                    addMessage('🧑‍💼 <b>Менеджер:</b> ' + data.operator, 'operator');
+                }
+            } catch (e) {
+                // Тихо проглатываем ошибки polling
+            }
+        }, 5000); // Каждые 5 секунд
+    }
+
+    function stopPolling() {
+        if (pollIntervalId) {
+            clearInterval(pollIntervalId);
+            pollIntervalId = null;
+        }
+    }
 
     if (chatToggle && chatWindow && chatClose) {
         // Toggle chat window
         chatToggle.addEventListener('click', () => {
             chatWindow.classList.add('is-open');
             setTimeout(() => chatInput.focus(), 300);
+            startPolling();
         });
 
         // Close chat window
         chatClose.addEventListener('click', () => {
             chatWindow.classList.remove('is-open');
+            stopPolling();
         });
 
         // Close on escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && chatWindow.classList.contains('is-open')) {
                 chatWindow.classList.remove('is-open');
+                stopPolling();
             }
         });
 
@@ -544,6 +580,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('chat-message', `chat-message--${sender}`);
+        if (sender === 'operator') {
+            messageDiv.classList.add('chat-message--bot', 'chat-message--operator');
+        }
         messageDiv.innerHTML = formattedText;
         chatMessages.appendChild(messageDiv);
         scrollToBottom();

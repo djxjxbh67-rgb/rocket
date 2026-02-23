@@ -566,6 +566,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clean up text formatting from AI
         let formattedText = text || '';
 
+        // 0. Strip [HANDOFF] system marker (invisible to client)
+        formattedText = formattedText.replace(/\s*\[HANDOFF\]\s*/gi, '');
+
         // 1. Convert Markdown bold
         formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 

@@ -491,9 +491,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             addMessage('Извините, я получил пустой ответ от сервера.', 'bot');
                         }
                     } catch (parseError) {
-                        // Если JSON сломался из-за кавычек (invalid JSON), мы просто берем весь сырой текст!
-                        if (rawText && rawText.trim().length > 0) {
-                            addMessage(rawText, 'bot');
+                        // Если JSON сломался из-за кавычек внутри ответа ИИ (invalid JSON)
+                        let cleanedText = rawText.trim();
+
+                        // Пытаемся вручную удалить сломанную обертку { "reply": "..." }
+                        if (cleanedText.includes('"reply"')) {
+                            // Убираем начало { "reply": "
+                            cleanedText = cleanedText.replace(/^\{\s*"reply"\s*:\s*"/i, '');
+                            // Убираем конец "}
+                            cleanedText = cleanedText.replace(/"\s*\}$/, '');
+                            // Восстанавливаем кавычки и переносы
+                            cleanedText = cleanedText.replace(/\\"/g, '"').replace(/\\n/g, '<br>');
+                        }
+
+                        if (cleanedText && cleanedText.trim().length > 0) {
+                            addMessage(cleanedText, 'bot');
                         } else {
                             addMessage('Извините, я получил пустой ответ от сервера.', 'bot');
                         }

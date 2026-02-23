@@ -428,11 +428,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let pollIntervalId = null;
     let handoffActive = false; // Polling запускается ТОЛЬКО после handoff
+    let pollCount = 0;
+    const MAX_POLLS = 30; // Максимум 30 запросов (5 минут при 10с интервале)
 
     // --- Operator Polling ---
     function startPolling() {
         if (!MAKE_POLL_URL || pollIntervalId || !handoffActive) return;
+        pollCount = 0;
         pollIntervalId = setInterval(async () => {
+            pollCount++;
+            // Автостоп через 5 минут
+            if (pollCount >= MAX_POLLS) {
+                stopPolling();
+                return;
+            }
             try {
                 const res = await fetch(MAKE_POLL_URL, {
                     method: 'POST',
@@ -442,11 +451,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
                 if (data && data.operator) {
                     addMessage('🧑‍💼 <b>Менеджер:</b> ' + data.operator, 'operator');
+                    // После получения ответа — пауза, ждём следующий handoff-запрос
+                    stopPolling();
+                    // Polling перезапустится при следующем сообщении клиента
                 }
             } catch (e) {
                 // Тихо проглатываем ошибки polling
             }
-        }, 10000); // Каждые 10 секунд (экономия кредитов)
+        }, 10000); // Каждые 10 секунд
     }
 
     function stopPolling() {
@@ -527,6 +539,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             // Активируем polling только при handoff
                             if (data.reply.includes('[HANDOFF]') || data.reply.includes('передано менеджеру')) {
                                 handoffActive = true;
+                                startPolling();
+                            } else if (handoffActive && !pollIntervalId) {
+                                // Если handoff уже активен и polling остановлен — перезапустить
                                 startPolling();
                             }
                             addMessage(data.reply, 'bot');

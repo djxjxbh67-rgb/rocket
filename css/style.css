@@ -1140,6 +1140,24 @@ ul {
     transform: translateX(0);
 }
 
+.chat-widget__badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #f35588;
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 2px solid white;
+}
+
 .chat-window {
     position: absolute;
     bottom: 80px;

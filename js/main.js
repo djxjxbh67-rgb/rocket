@@ -414,6 +414,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatForm = document.getElementById('chatForm');
     const chatInput = document.getElementById('chatInput');
     const chatMessages = document.getElementById('chatMessages');
+    const chatBadge = document.getElementById('chatBadge');
+
+    let unreadCount = 0;
 
     // Make.com Webhook URL
     // ВСТАВЬТЕ СЮДА ВАШ WEBHOOK ИЗ MAKE.COM, НАПРИМЕР: 'https://hook.eu1.make.com/xxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -473,6 +476,14 @@ document.addEventListener('DOMContentLoaded', () => {
         chatToggle.addEventListener('click', () => {
             chatWindow.classList.add('is-open');
             setTimeout(() => chatInput.focus(), 300);
+
+            // Сбрасываем счетчик при открытии
+            if (chatBadge) {
+                unreadCount = 0;
+                chatBadge.style.display = 'none';
+                chatBadge.textContent = '';
+            }
+
             // НЕ запускаем polling при открытии! Только после handoff.
             if (handoffActive) startPolling();
         });
@@ -614,6 +625,20 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDiv.innerHTML = formattedText;
         chatMessages.appendChild(messageDiv);
         scrollToBottom();
+
+        // Если пришло сообщение от бота/оператора, а окно чата закрыто - показываем бейджик
+        if ((sender === 'bot' || sender === 'operator') && chatWindow && !chatWindow.classList.contains('is-open')) {
+            if (chatBadge) {
+                unreadCount++;
+                chatBadge.textContent = unreadCount;
+                chatBadge.style.display = 'flex';
+
+                // Перезапускаем анимацию на toggle для привлечения внимания
+                chatToggle.classList.remove('pulse-anim');
+                void chatToggle.offsetWidth; // trigger reflow
+                chatToggle.classList.add('pulse-anim');
+            }
+        }
     }
 
     function addTypingIndicator() {

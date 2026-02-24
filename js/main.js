@@ -594,10 +594,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Convert Markdown bold
         formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
-        // 2. Convert Markdown bullet lists
+        // 2. Convert Markdown links
+        formattedText = formattedText.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: underline; font-weight: 500;">$1</a>');
+
+        // 3. Convert Markdown bullet lists
         formattedText = formattedText.replace(/(?:^|<br>)\s*\*\s+(.*?)(?=<br>|$)/g, '<br>• $1');
 
-        // 3. Clean up excessive line breaks (replace 3+ breaks with just 2 for a single paragraph gap)
+        // 4. Clean up excessive line breaks (replace 3+ breaks with just 2 for a single paragraph gap)
         formattedText = formattedText.replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>');
 
         // 4. Clean up breaks at the very beginning or end

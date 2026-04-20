@@ -120,17 +120,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Form Validation and Submission ---
-    // --- Telegram Anti-Spam Button ---
-    const tgBtn = document.getElementById('tgBtn');
-    if (tgBtn) {
-        tgBtn.addEventListener('click', function (e) {
+    // --- Telegram Anti-Spam Buttons ---
+    const tgButtons = document.querySelectorAll('.btn--telegram');
+    tgButtons.forEach(btn => {
+        btn.addEventListener('click', function (e) {
             e.preventDefault();
             const encodedUser = this.getAttribute('data-tg');
             if (encodedUser) {
                 window.open('https://t.me/' + atob(encodedUser), '_blank');
             }
         });
-    }
+    });
 
     const contactForm = document.getElementById('contact-form');
     const phoneInput = document.getElementById('phone');
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } catch (error) {
                     console.error('Error sending order:', error);
-                    formSuccess.textContent = '⚠️ Ошибка при отправке. Пожалуйста, напишите нам в Telegram.';
+                    formSuccess.innerHTML = '⚠️ Ошибка при отправке. Пожалуйста, <a href="https://t.me/sergkane" target="_blank" style="color: inherit; text-decoration: underline; font-weight: 600;">напишите нам в Telegram</a>.';
                     formSuccess.style.color = '#dc3545';
                 }
             } else {
@@ -581,16 +581,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } catch (error) {
                     removeTypingIndicator(typingIndicatorId);
-                    addMessage('Произошла ошибка при подключении к серверу ИИ. Пожалуйста, попробуйте позже.', 'bot');
+                    addMessage('🤖 Извините, мой ИИ-модуль сейчас на техобслуживании. <br><br>Пожалуйста, напишите нашему основателю напрямую в Telegram, он ответит мгновенно: [Написать @sergkane](https://t.me/sergkane)', 'bot');
                     console.error('Chat AI Error:', error);
                 }
             } else {
-                // SIMULATION MODE (Demo before API is connected)
+                // FALLBACK / SERVICE MESSAGE (If webhook is missing)
                 setTimeout(() => {
                     removeTypingIndicator(typingIndicatorId);
-                    const botResponse = generateSimulatedResponse(messageText.toLowerCase());
-                    addMessage(botResponse, 'bot');
-                }, 1500 + Math.random() * 1000); // 1.5 - 2.5s realistic delay
+                    addMessage('🤖 Сейчас я настраиваю свои нейронные связи. <br><br>Вы можете не ждать и обсудить ваш проект напрямую в Telegram: [Написать @sergkane](https://t.me/sergkane)', 'bot');
+                }, 1000);
             }
         });
     }

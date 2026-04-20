@@ -137,12 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const phoneError = document.getElementById('phone-error');
     const formSuccess = document.getElementById('form-success');
 
-    // Make.com Webhook URL for Orders
-    // ВСТАВЬТЕ СЮДА ВАШ НОВЫЙ WEBHOOK ИЗ MAKE.COM ДЛЯ ФОРМЫ ЗАКАЗА
-    const MAKE_ORDER_WEBHOOK_URL = 'https://hook.us2.make.com/e87ed6i0di9p1qqdu6gdmmdxxe934fe9';
+    // Formspree URL (для отправки на почту)
+    const FORMSPREE_URL = 'https://formspree.io/f/xwvaqanw';
 
     if (contactForm && phoneInput && phoneError && formSuccess) {
-        // Phone mask (simplified)
+        // Phone mask
         phoneInput.addEventListener('input', function (e) {
             let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
             if (!x[1]) return;
@@ -153,14 +152,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (x[5]) formatted += '-' + x[5];
             e.target.value = formatted;
         });
-
+        
         contactForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            // Honeypot check for spam bots
             if (document.getElementById('contact_honey')?.value) return;
 
-            // Basic validation
             const phoneVal = phoneInput.value.replace(/\D/g, '');
             if (phoneVal.length < 11) {
                 phoneError.classList.add('active');
@@ -177,51 +174,48 @@ document.addEventListener('DOMContentLoaded', () => {
             const phone = document.getElementById('phone').value;
             const subject = document.getElementById('form-subject').value;
 
-            if (MAKE_ORDER_WEBHOOK_URL) {
-                try {
-                    const response = await fetch(MAKE_ORDER_WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            name: name,
-                            phone: phone,
-                            subject: subject,
-                            source: window.location.hostname
-                        })
-                    });
+            try {
+                const response = await fetch(FORMSPREE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        phone: phone,
+                        message: subject, // Formspree лучше понимает поле 'message'
+                        _subject: 'Новая заявка: ' + subject
+                    })
+                });
 
-                    if (response.ok) {
-                        formSuccess.textContent = '🎉 Спасибо! Заявка отправлена. Мы скоро свяжемся с вами.';
-                        formSuccess.style.color = 'var(--success-color, #28a745)';
+                if (response.ok) {
+                    formSuccess.innerHTML = '🎉 Спасибо! Заявка успешно отправлена на почту.';
+                    formSuccess.style.color = 'var(--success-color, #28a745)';
+                    contactForm.reset();
+                    
+                    // Reset selection UI
+                    selectedPlan = null;
+                    selectedUpsells.clear();
+                    updateOrderUI(); 
+                } else {
+                    const data = await response.json();
+                    if (Object.hasOwn(data, 'errors')) {
+                        throw new Error(data["errors"].map(error => error["message"]).join(", "));
                     } else {
-                        throw new Error('Network response was not ok.');
+                        throw new Error('Oops! There was a problem submitting your form');
                     }
-                } catch (error) {
-                    console.error('Error sending order:', error);
-                    formSuccess.innerHTML = '⚠️ Ошибка при отправке. Пожалуйста, <a href="https://t.me/sergkane" target="_blank" style="color: inherit; text-decoration: underline; font-weight: 600;">напишите нам в Telegram</a>.';
-                    formSuccess.style.color = '#dc3545';
                 }
-            } else {
-                // Simulation mode if webhook is not set
-                console.log('Simulation Mode: Order submitted', { name, phone, subject });
-                formSuccess.textContent = 'ℹ️ Тестовый режим: Заявка получена (Вебхук не настроен).';
+            } catch (error) {
+                console.error('Error sending order:', error);
+                formSuccess.innerHTML = '⚠️ Ошибка при отправке. Пожалуйста, <a href="https://t.me/sergkane" target="_blank" style="color: inherit; text-decoration: underline; font-weight: 600;">напишите нам в Telegram</a>.';
+                formSuccess.style.color = '#dc3545';
             }
 
             formSuccess.classList.add('active');
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
 
-            // Only reset form if successful (or simulated)
-            if (MAKE_ORDER_WEBHOOK_URL === '' || formSuccess.textContent.includes('Спасибо') || formSuccess.textContent.includes('Тестовый')) {
-                contactForm.reset();
-                selectedPlan = null;
-                selectedUpsells.clear();
-                updateOrderUI(); // Reset the order container UI
-            }
-
-            // Hide message after 5 seconds
             setTimeout(() => {
                 formSuccess.classList.remove('active');
             }, 6000);
@@ -581,14 +575,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } catch (error) {
                     removeTypingIndicator(typingIndicatorId);
-                    addMessage('🤖 Извините, мой ИИ-модуль сейчас на техобслуживании. <br><br>Пожалуйста, напишите нашему основателю напрямую в Telegram, он ответит мгновенно: [Написать @sergkane](https://t.me/sergkane)', 'bot');
+                    addMessage('🤖 Извините, мой ИИ-модуль сейчас на техобслуживании. <br><br>Пожалуйста, напишите нашему основателю напрямую в Telegram, он ответит мгновенно: [Написать в Telegram](https://t.me/sergkane)', 'bot');
                     console.error('Chat AI Error:', error);
                 }
             } else {
                 // FALLBACK / SERVICE MESSAGE (If webhook is missing)
                 setTimeout(() => {
                     removeTypingIndicator(typingIndicatorId);
-                    addMessage('🤖 Сейчас я настраиваю свои нейронные связи. <br><br>Вы можете не ждать и обсудить ваш проект напрямую в Telegram: [Написать @sergkane](https://t.me/sergkane)', 'bot');
+                    addMessage('🤖 Сейчас я настраиваю свои нейронные связи. <br><br>Вы можете не ждать и обсудить ваш проект напрямую в Telegram: [Написать в Telegram](https://t.me/sergkane)', 'bot');
                 }, 1000);
             }
         });

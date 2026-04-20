@@ -412,21 +412,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let unreadCount = 0;
 
-    // Make.com Webhook URL
-    // ВСТАВЬТЕ СЮДА ВАШ WEBHOOK ИЗ MAKE.COM, НАПРИМЕР: 'https://hook.eu1.make.com/xxxxxxxxxxxxxxxxxxxxxxxxxxx'
-    const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/n627zty7p6legfvvnxsp5ueuy96ud4u7';
-
-    // Make.com Polling Endpoint — для получения ответов оператора
-    // ВСТАВЬТЕ СЮДА URL ВАШЕГО POLLING WEBHOOK ПОСЛЕ СОЗДАНИЯ СЦЕНАРИЯ В MAKE.COM
-    const MAKE_POLL_URL = 'https://hook.us2.make.com/sz1nym7wju5fqkuijkl8k5udjp7546ip';
+    // Make.com Webhook URL (ОТКЛЮЧЕНО - ЗАГЛУШКА)
+    const MAKE_WEBHOOK_URL = ''; 
+    const MAKE_POLL_URL = ''; 
 
     // Generate a unique session ID for the chat when the page loads
     const CHAT_SESSION_ID = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
     let pollIntervalId = null;
-    let handoffActive = false; // Polling запускается ТОЛЬКО после handoff
+    let handoffActive = false; 
     let pollCount = 0;
-    const MAX_POLLS = 30; // Максимум 30 запросов (5 минут при 10с интервале)
+    const MAX_POLLS = 30;
 
     // --- Operator Polling ---
     function startPolling() {
@@ -579,10 +575,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Chat AI Error:', error);
                 }
             } else {
-                // FALLBACK / SERVICE MESSAGE (If webhook is missing)
+                // FALLBACK / SERVICE MESSAGE (ЗА ГЛУШКА)
                 setTimeout(() => {
                     removeTypingIndicator(typingIndicatorId);
-                    addMessage('🤖 Сейчас я настраиваю свои нейронные связи. <br><br>Вы можете не ждать и обсудить ваш проект напрямую в Telegram: [Написать в Telegram](https://t.me/sergkane)', 'bot');
+                    addMessage('👋 Здравствуйте! Сейчас я нахожусь в процессе обучения новым навыкам. <br><br>Чтобы проконсультироваться по вашему проекту прямо сейчас, пожалуйста, напишите нашему специалисту: [Написать в Telegram](https://t.me/sergkane)', 'bot');
                 }, 1000);
             }
         });

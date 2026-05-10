@@ -598,13 +598,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Convert Markdown links
         formattedText = formattedText.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: underline; font-weight: 500;">$1</a>');
 
-        // 3. Convert Markdown bullet lists
-        formattedText = formattedText.replace(/(?:^|<br>)\s*\*\s+(.*?)(?=<br>|$)/g, '<br>• $1');
+        // 3. Convert Markdown bullet lists (handles both * and -)
+        formattedText = formattedText.replace(/(?:^|\n|<br>)\s*[-*]\s+(.*?)(?=\n|<br>|$)/g, '<br>• $1');
 
-        // 4. Clean up excessive line breaks (replace 3+ breaks with just 2 for a single paragraph gap)
+        // 4. Convert standard newlines to <br> for HTML rendering
+        formattedText = formattedText.replace(/\n/g, '<br>');
+
+        // 5. Clean up excessive line breaks (replace 3+ breaks with just 2 for a single paragraph gap)
         formattedText = formattedText.replace(/(<br\s*\/?>\s*){3,}/gi, '<br><br>');
 
-        // 4. Clean up breaks at the very beginning or end
+        // 6. Clean up breaks at the very beginning or end
         formattedText = formattedText.replace(/^(<br\s*\/?>)+|(<br\s*\/?>)+$/gi, '');
 
         const messageDiv = document.createElement('div');

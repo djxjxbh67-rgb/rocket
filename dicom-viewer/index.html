@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DICOM CT Viewer</title>
+    <meta name="description" content="Web-based DICOM viewer for CT scan images">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/dicom-parser@1.8.21/dist/dicomParser.min.js"></script>
+</head>
+<body>
+    <!-- Drop overlay -->
+    <div id="dropOverlay" class="drop-overlay hidden">
+        <div class="drop-overlay-content">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            <h2>Перетащите DICOM файлы сюда</h2>
+            <p>Поддерживаются файлы .dcm и папки с КТ-исследованиями</p>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p id="loadingText">Загрузка файлов...</p>
+            <div class="loading-bar"><div id="loadingProgress" class="loading-bar-fill"></div></div>
+        </div>
+    </div>
+
+    <!-- Welcome screen -->
+    <div id="welcomeScreen" class="welcome-screen">
+        <div class="welcome-content">
+            <div class="welcome-icon">
+                <svg width="96" height="96" viewBox="0 0 24 24" fill="none" stroke="url(#grad1)" stroke-width="1">
+                    <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#00d4ff"/>
+                        <stop offset="100%" style="stop-color:#7b2ff7"/>
+                    </linearGradient></defs>
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 2a10 10 0 0 1 0 20"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2c2.5 2.5 4 5.5 4 10s-1.5 7.5-4 10"/>
+                </svg>
+            </div>
+            <h1>DICOM CT Viewer</h1>
+            <p class="welcome-sub">Просмотр КТ-исследований прямо в браузере</p>
+            <div class="welcome-actions">
+                <button id="btnOpenFiles" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                        <polyline points="13 2 13 9 20 9"/>
+                    </svg>
+                    Открыть файлы
+                </button>
+                <button id="btnOpenFolder" class="btn btn-secondary" onclick="document.getElementById('folderInput').click()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Открыть папку (CD/DVD)
+                </button>
+            </div>
+            <p class="welcome-hint">или перетащите файлы / папку в окно браузера</p>
+            <div class="welcome-features">
+                <div class="feature"><span class="feature-icon">🫁</span><span>Пресеты W/L для КТ</span></div>
+                <div class="feature"><span class="feature-icon">🔍</span><span>Зум и панорамирование</span></div>
+                <div class="feature"><span class="feature-icon">📋</span><span>DICOM-теги</span></div>
+                <div class="feature"><span class="feature-icon">⌨️</span><span>Горячие клавиши</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main viewer -->
+    <div id="viewerApp" class="viewer-app hidden">
+        <!-- Toolbar -->
+        <header class="toolbar" id="toolbar">
+            <div class="toolbar-group toolbar-brand">
+                <span class="brand-icon">◉</span>
+                <span class="brand-text">DICOM Viewer</span>
+            </div>
+            <div class="toolbar-group toolbar-tools">
+                <button class="tool-btn active" data-tool="windowing" title="Window/Level (W)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/>
+                    </svg>
+                    <span>W/L</span>
+                </button>
+                <button class="tool-btn" data-tool="pan" title="Панорамирование (P)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/>
+                        <polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>
+                    </svg>
+                    <span>Пан</span>
+                </button>
+                <button class="tool-btn" data-tool="zoom" title="Масштаб (Z)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+                    </svg>
+                    <span>Зум</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button class="tool-btn" id="btnInvert" title="Инверсия (I)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 2v20"/>
+                        <path d="M12 2a10 10 0 0 0 0 20" fill="currentColor" opacity="0.3"/>
+                    </svg>
+                    <span>Инверсия</span>
+                </button>
+                <button class="tool-btn" id="btnReset" title="Сброс (R)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                    </svg>
+                    <span>Сброс</span>
+                </button>
+                <button class="tool-btn" id="btnFit" title="Вписать (F)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                    </svg>
+                    <span>Вписать</span>
+                </button>
+            </div>
+            <div class="toolbar-group toolbar-presets">
+                <label class="preset-label">Пресеты:</label>
+                <select id="presetSelect" class="preset-select">
+                    <option value="">— Выбрать —</option>
+                    <option value="brain">🧠 Мозг</option>
+                    <option value="subdural">🧠 Субдуральное</option>
+                    <option value="stroke">🧠 Инсульт</option>
+                    <option value="temporal">🦴 Височные кости</option>
+                    <option value="soft">🫀 Мягкие ткани</option>
+                    <option value="lung">🫁 Лёгкие</option>
+                    <option value="mediastinum">🫁 Средостение</option>
+                    <option value="bone">🦴 Кости</option>
+                    <option value="abdomen">🫁 Брюшная полость</option>
+                    <option value="liver">🫀 Печень</option>
+                </select>
+            </div>
+            <div class="toolbar-group toolbar-actions">
+                <button class="tool-btn" id="btnAddFiles" title="Добавить файлы">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    <span>Ещё</span>
+                </button>
+                <button class="tool-btn" id="btnToggleTags" title="DICOM теги (T)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    <span>Теги</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="viewer-body">
+            <!-- Series panel -->
+            <aside class="series-panel" id="seriesPanel">
+                <div class="panel-header">
+                    <h3>Серии</h3>
+                    <span id="seriesCount" class="badge">0</span>
+                </div>
+                <div class="series-list" id="seriesList"></div>
+            </aside>
+
+            <!-- Viewport -->
+            <main class="viewport-container">
+                <div class="viewport" id="viewport">
+                    <canvas id="dicomCanvas"></canvas>
+                    <!-- DICOM overlay -->
+                    <div class="overlay overlay-tl" id="overlayTL"></div>
+                    <div class="overlay overlay-tr" id="overlayTR"></div>
+                    <div class="overlay overlay-bl" id="overlayBL"></div>
+                    <div class="overlay overlay-br" id="overlayBR"></div>
+                </div>
+                <!-- Slice slider -->
+                <div class="slice-bar" id="sliceBar">
+                    <span id="sliceLabel" class="slice-label">0 / 0</span>
+                    <input type="range" id="sliceSlider" min="0" max="0" value="0" class="slice-slider">
+                </div>
+            </main>
+
+            <!-- Tags panel -->
+            <aside class="tags-panel hidden" id="tagsPanel">
+                <div class="panel-header">
+                    <h3>DICOM Теги</h3>
+                    <button class="panel-close" id="btnCloseTags">✕</button>
+                </div>
+                <div class="tags-search">
+                    <input type="text" id="tagSearch" placeholder="Поиск тегов..." class="tag-search-input">
+                </div>
+                <div class="tags-list" id="tagsList"></div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Hidden file inputs -->
+    <input type="file" id="fileInput" multiple accept=".dcm,.dicom,*" style="display:none">
+    <input type="file" id="folderInput" webkitdirectory style="display:none">
+
+    <script src="script.js"></script>
+</body>
+</html>

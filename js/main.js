@@ -412,8 +412,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let unreadCount = 0;
 
-    // Make.com Webhook URL (ОТКЛЮЧЕНО - ЗАГЛУШКА)
-    const MAKE_WEBHOOK_URL = ''; 
+    // Make.com Webhook URL (Восстановлено для сценария Rocket AI)
+    // Замени на новую ссылку, если в Make.com сгенерировался новый адрес вебхука!
+    const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/dg98ayjqms35aacawivrtkpc6g29a6n9'; 
     const MAKE_POLL_URL = ''; 
 
     // Generate a unique session ID for the chat when the page loads
@@ -575,7 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Chat AI Error:', error);
                 }
             } else {
-                // FALLBACK / SERVICE MESSAGE (ЗА ГЛУШКА)
+                // FALLBACK / SERVICE MESSAGE (Если вебхук пустой)
                 setTimeout(() => {
                     removeTypingIndicator(typingIndicatorId);
                     addMessage('👋 Здравствуйте! Сейчас я нахожусь в процессе обучения новым навыкам. <br><br>Чтобы проконсультироваться по вашему проекту прямо сейчас, пожалуйста, напишите нашему специалисту: [Написать в Telegram](https://t.me/sergkane)', 'bot');
